@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import styled from "styled-components";
 
-function App() {
+import ReclamationForm from "./components/reclamation-form";
+import Header from "./components/header";
+import Footer from "./components/footer";
+
+const Container = styled.main`
+  padding: 0 1rem;
+  max-width: 800px;
+  margin: auto;
+  overflow-x: hidden;
+`;
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Container>
+        <ReclamationForm />
+        <Footer />
+      </Container>
+    </>
   );
-}
+};
 
 export default App;
