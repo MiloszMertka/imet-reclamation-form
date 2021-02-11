@@ -6,7 +6,11 @@ const Container = styled.div`
 
 const TextInput = styled.input`
   display: block;
-  border: 1px solid ${(props) => props.theme.colors.primary};
+  border: 1px solid
+    ${(props) =>
+      props.error && props.touched
+        ? props.theme.colors.error
+        : props.theme.colors.primary};
   width: 100%;
   font-size: 1rem;
   padding: 0.5rem 1rem;
@@ -15,7 +19,21 @@ const TextInput = styled.input`
 
 const Label = styled.label``;
 
-const Input = ({ name, value, label, handleChange, handleBlur, ...props }) => {
+const Error = styled.span`
+  color: ${(props) => props.theme.colors.error};
+  font-size: 0.875rem;
+`;
+
+const Input = ({
+  name,
+  value,
+  label,
+  handleChange,
+  handleBlur,
+  error,
+  touched,
+  ...props
+}) => {
   return (
     <Container>
       <Label htmlFor={name}>{label}</Label>
@@ -25,8 +43,11 @@ const Input = ({ name, value, label, handleChange, handleBlur, ...props }) => {
         value={value}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={error}
+        touched={touched}
         {...props}
       />
+      {error && touched && <Error>{error}</Error>}
     </Container>
   );
 };

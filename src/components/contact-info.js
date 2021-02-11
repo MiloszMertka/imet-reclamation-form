@@ -21,6 +21,8 @@ const ContactInfo = ({
   phoneNumber,
   handleChange,
   handleBlur,
+  errors,
+  touched,
   setFieldValue,
   regulationsAgreement,
   privacyPolicyAgreement,
@@ -34,6 +36,8 @@ const ContactInfo = ({
         value={email}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.email}
+        touched={touched.email}
       />
       <Input
         type="text"
@@ -50,11 +54,16 @@ const ContactInfo = ({
         value={phoneNumber}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.phoneNumber}
+        touched={touched.phoneNumber}
       />
       <Checkbox
         name="regulationsAgreement"
         checked={regulationsAgreement}
         setFieldValue={setFieldValue}
+        handleBlur={handleBlur}
+        error={errors.regulationsAgreement}
+        touched={touched.regulationsAgreement}
       >
         Oświadczam, że akceptuję warunki wystawienia faktury korygującej przy
         zwrocie towaru określone w{" "}
@@ -71,6 +80,9 @@ const ContactInfo = ({
         name="privacyPolicyAgreement"
         checked={privacyPolicyAgreement}
         setFieldValue={setFieldValue}
+        handleBlur={handleBlur}
+        error={errors.privacyPolicyAgreement}
+        touched={touched.privacyPolicyAgreement}
       >
         Oświadczam, że zapoznałem/am się z{" "}
         <a

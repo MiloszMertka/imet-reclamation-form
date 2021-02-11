@@ -9,7 +9,14 @@ const ButtonContainer = styled.div`
   margin: 2.5rem 0;
 `;
 
-const CompanyData = ({ nip, name, handleChange, handleBlur }) => {
+const CompanyData = ({
+  nip,
+  name,
+  handleChange,
+  handleBlur,
+  errors,
+  touched,
+}) => {
   return (
     <>
       <Input
@@ -19,6 +26,8 @@ const CompanyData = ({ nip, name, handleChange, handleBlur }) => {
         value={nip}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.companyNIP}
+        touched={touched.companyNIP}
       />
       <Input
         type="text"
@@ -27,6 +36,8 @@ const CompanyData = ({ nip, name, handleChange, handleBlur }) => {
         value={name}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.companyName}
+        touched={touched.companyName}
       />
       <ButtonContainer>
         <Button link="/produkty">Dalej</Button>

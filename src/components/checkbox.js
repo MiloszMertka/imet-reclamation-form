@@ -17,7 +17,11 @@ const HiddenControl = styled.input`
 const VisibleControl = styled.div`
   width: 1.25rem;
   height: 1.25rem;
-  border: 1px solid ${(props) => props.theme.colors.primary};
+  border: 1px solid
+    ${(props) =>
+      props.error && props.touched
+        ? props.theme.colors.error
+        : props.theme.colors.primary};
   position: absolute;
   top: 0.25rem;
   background-color: ${(props) =>
@@ -33,22 +37,45 @@ const Checkmark = styled(CheckmarkIcon)`
   left: calc(-50% + 2px);
 `;
 
-const Label = styled.label`
+const TextContainer = styled.div`
   margin-left: 0.75rem;
 `;
 
-const Checkbox = ({ name, children, checked, setFieldValue, ...props }) => {
+const Label = styled.label`
+  color: ${(props) =>
+    props.error && props.touched
+      ? props.theme.colors.error
+      : props.theme.colors.text};
+`;
+
+const Error = styled.div`
+  color: ${(props) => props.theme.colors.error};
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+`;
+
+const Checkbox = ({
+  name,
+  children,
+  checked,
+  setFieldValue,
+  handleBlur,
+  error,
+  touched,
+  ...props
+}) => {
   return (
     <Container>
       <HiddenControl
         type="checkbox"
-        id={name}
+        id={`${name}_hidden`}
         name={name}
         checked={checked}
         disabled={true}
         {...props}
       />
       <VisibleControl
+        id={name}
         onClick={() => setFieldValue(name, !checked)}
         onKeyDown={(event) =>
           (event.key === " " || event.key === "Enter") &&
@@ -56,10 +83,18 @@ const Checkbox = ({ name, children, checked, setFieldValue, ...props }) => {
         }
         tabIndex={0}
         checked={checked}
+        onBlur={handleBlur}
+        error={error}
+        touched={touched}
       >
         <Checkmark checked={checked} />
       </VisibleControl>
-      <Label htmlFor={name}>{children}</Label>
+      <TextContainer>
+        <Label htmlFor={`${name}_hidden`} error={error} touched={touched}>
+          {children}
+        </Label>
+        {error && touched && <Error>{error}</Error>}
+      </TextContainer>
     </Container>
   );
 };

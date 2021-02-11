@@ -6,7 +6,11 @@ const Container = styled.div`
 
 const TextInput = styled.textarea`
   display: block;
-  border: 1px solid ${(props) => props.theme.colors.primary};
+  border: 1px solid
+    ${(props) =>
+      props.error && props.touched
+        ? props.theme.colors.error
+        : props.theme.colors.primary};
   width: 100%;
   font-size: 1rem;
   padding: 0.5rem 1rem;
@@ -17,12 +21,19 @@ const TextInput = styled.textarea`
 
 const Label = styled.label``;
 
+const Error = styled.span`
+  color: ${(props) => props.theme.colors.error};
+  font-size: 0.875rem;
+`;
+
 const Textarea = ({
   name,
   label,
   value,
   handleChange,
   handleBlur,
+  error,
+  touched,
   ...props
 }) => {
   return (
@@ -34,8 +45,11 @@ const Textarea = ({
         value={value}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={error}
+        touched={touched}
         {...props}
       />
+      {error && touched && <Error>{error}</Error>}
     </Container>
   );
 };

@@ -9,30 +9,6 @@ import Textarea from "./textarea";
 import Button from "./button";
 import RemoveButton from "./remove-button";
 
-const reclamationReasons = [
-  { label: "", value: "" },
-  {
-    label: "Błąd w cenie",
-    value: "Błąd w cenie",
-  },
-  {
-    label: "Błąd w ilości sprzedanej",
-    value: "Błąd w ilości sprzedanej",
-  },
-  {
-    label: "Błąd w stawce podatku",
-    value: "Błąd w stawce podatku",
-  },
-  {
-    label: "Reklamacja",
-    value: "Reklamacja",
-  },
-  {
-    label: "Uszkodzony towar",
-    value: "Uszkodzony towar",
-  },
-];
-
 const ProductsList = styled.div`
   border-top: 1px solid ${(props) => props.theme.colors.primary};
   border-bottom: 1px solid ${(props) => props.theme.colors.primary};
@@ -70,8 +46,11 @@ const ButtonsContainer = styled.div`
 
 const Products = ({
   products,
+  reclamationReasons,
   handleChange,
   handleBlur,
+  errors,
+  touched,
   setFieldValue,
   invoiceNumber,
   comments,
@@ -85,6 +64,8 @@ const Products = ({
         value={invoiceNumber}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.invoiceNumber}
+        touched={touched.invoiceNumber}
       />
       <FieldArray
         name="products"
@@ -104,6 +85,16 @@ const Products = ({
                   value={product.productSymbol}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  error={
+                    errors.products &&
+                    errors.products[index] &&
+                    errors.products[index].productSymbol
+                  }
+                  touched={
+                    touched.products &&
+                    touched.products[index] &&
+                    touched.products[index].productSymbol
+                  }
                 />
                 <Input
                   type="text"
@@ -112,6 +103,16 @@ const Products = ({
                   value={product.productName}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  error={
+                    errors.products &&
+                    errors.products[index] &&
+                    errors.products[index].productName
+                  }
+                  touched={
+                    touched.products &&
+                    touched.products[index] &&
+                    touched.products[index].productName
+                  }
                 />
                 <Dropdown
                   name={`products.${index}.reclamationReason`}
@@ -119,6 +120,16 @@ const Products = ({
                   value={product.reclamationReason}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  error={
+                    errors.products &&
+                    errors.products[index] &&
+                    errors.products[index].reclamationReason
+                  }
+                  touched={
+                    touched.products &&
+                    touched.products[index] &&
+                    touched.products[index].reclamationReason
+                  }
                   options={reclamationReasons}
                 />
               </Product>
@@ -143,6 +154,8 @@ const Products = ({
         value={comments}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.comments}
+        touched={touched.comments}
         rows={5}
       />
       <FileInput

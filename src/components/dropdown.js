@@ -24,12 +24,21 @@ const Label = styled.label``;
 
 const Select = styled.select`
   display: block;
-  border: 1px solid ${(props) => props.theme.colors.primary};
+  border: 1px solid
+    ${(props) =>
+      props.error && props.touched
+        ? props.theme.colors.error
+        : props.theme.colors.primary};
   width: 100%;
   font-size: 1rem;
   padding: 0.5rem 1rem;
   margin-top: 0.5rem;
   appearance: none;
+`;
+
+const Error = styled.span`
+  color: ${(props) => props.theme.colors.error};
+  font-size: 0.875rem;
 `;
 
 const Dropdown = ({
@@ -39,6 +48,8 @@ const Dropdown = ({
   value,
   handleChange,
   handleBlur,
+  error,
+  touched,
   ...props
 }) => {
   return (
@@ -50,6 +61,8 @@ const Dropdown = ({
         value={value}
         onChange={handleChange}
         onBlur={handleBlur}
+        error={error}
+        touched={touched}
         {...props}
       >
         {options.map((option) => (
@@ -58,6 +71,7 @@ const Dropdown = ({
           </option>
         ))}
       </Select>
+      {error && touched && <Error>{error}</Error>}
     </Container>
   );
 };
