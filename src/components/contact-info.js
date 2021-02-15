@@ -26,6 +26,8 @@ const ContactInfo = ({
   setFieldValue,
   regulationsAgreement,
   privacyPolicyAgreement,
+  isSubmitting,
+  isValid,
 }) => {
   return (
     <>
@@ -46,6 +48,8 @@ const ContactInfo = ({
         value={name}
         handleChange={handleChange}
         handleBlur={handleBlur}
+        error={errors.name}
+        touched={touched.name}
       />
       <Input
         type="text"
@@ -96,7 +100,7 @@ const ContactInfo = ({
       </Checkbox>
       <ButtonContainer>
         <Button link="/produkty">Wstecz</Button>
-        <Button>Wyślij</Button>
+        <Button disabled={isSubmitting}>Wyślij</Button>
       </ButtonContainer>
     </>
   );

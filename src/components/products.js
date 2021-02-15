@@ -54,6 +54,7 @@ const Products = ({
   setFieldValue,
   invoiceNumber,
   comments,
+  attachments,
 }) => {
   return (
     <>
@@ -160,7 +161,10 @@ const Products = ({
       />
       <FileInput
         name="attachments"
-        label="Załączniki"
+        heading="Załączniki"
+        label="Wybierz pliki"
+        info="Max 10 plików typu jpg, png lub pdf o rozmiarze max 10 MB każdy"
+        files={attachments}
         setFieldValue={setFieldValue}
         multiple
       />

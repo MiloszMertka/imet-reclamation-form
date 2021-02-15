@@ -8,6 +8,8 @@ import "@fontsource/barlow";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
 
+import { BASE_NAME } from "./environment-variables";
+
 const theme = {
   colors: {
     primary: "#c6c6c6",
@@ -33,7 +35,7 @@ ReactDOM.render(
   <React.StrictMode>
     <GlobalStyle />
     <ThemeProvider theme={theme}>
-      <Router>
+      <Router basename={BASE_NAME}>
         <App />
       </Router>
     </ThemeProvider>

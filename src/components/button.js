@@ -26,16 +26,16 @@ const ButtonLink = styled.a`
 const Submit = styled(ButtonLink)`
   background-color: transparent;
   font-size: inherit;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
-const Button = ({ link, children }) => {
+const Button = ({ link, children, disabled, ...props }) => {
   return link ? (
-    <ButtonLink as={Link} to={link}>
+    <ButtonLink as={Link} to={link} {...props}>
       {children}
     </ButtonLink>
   ) : (
-    <Submit as="button" type="submit">
+    <Submit as="button" type="submit" disabled={disabled} {...props}>
       {children}
     </Submit>
   );
