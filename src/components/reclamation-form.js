@@ -53,6 +53,10 @@ const reclamationReasons = [
     label: "Uszkodzony towar",
     value: "Uszkodzony towar",
   },
+  {
+    label: "Zwrot towaru",
+    value: "Zwrot towaru",
+  },
 ];
 
 const reclamationReasonsValues = reclamationReasons.map(
