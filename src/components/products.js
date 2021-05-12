@@ -133,6 +133,25 @@ const Products = ({
                   }
                   options={reclamationReasons}
                 />
+                <Input
+                  type="number"
+                  min={1}
+                  name={`products.${index}.quantity`}
+                  label="Ilość"
+                  value={product.quantity}
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  error={
+                    errors.products &&
+                    errors.products[index] &&
+                    errors.products[index].quantity
+                  }
+                  touched={
+                    touched.products &&
+                    touched.products[index] &&
+                    touched.products[index].quantity
+                  }
+                />
               </Product>
             ))}
             <AddButton
@@ -141,6 +160,7 @@ const Products = ({
                   productSymbol: "",
                   productName: "",
                   reclamationReason: "",
+                  quantity: 1,
                 })
               }
             >

@@ -22,6 +22,7 @@ const initialValues = {
       productSymbol: "",
       productName: "",
       reclamationReason: "",
+      quantity: 1,
     },
   ],
   email: "",
@@ -98,6 +99,9 @@ const reclamationSchema = Yup.object().shape({
         reclamationReason: Yup.string()
           .oneOf(reclamationReasonsValues)
           .required("Należy wypełnić to pole"),
+        quantity: Yup.number()
+          .integer("Należy podać liczbę całkowitą")
+          .min(1, "Ilość musi wynosić co najmniej 1"),
       })
     ),
   email: Yup.string()
