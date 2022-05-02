@@ -72,7 +72,7 @@ const ContactInfo = ({
         Oświadczam, że akceptuję warunki wystawienia faktury korygującej przy
         zwrocie towaru określone w{" "}
         <a
-          href="https://b2b.phuimet.pl/pl/page/regulamin"
+          href="https://b2b.imet.pl/pl/page/regulamin"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -90,7 +90,7 @@ const ContactInfo = ({
       >
         Oświadczam, że zapoznałem/am się z{" "}
         <a
-          href="https://b2b.phuimet.pl/pl/page/polityka-prywatnosci"
+          href="https://b2b.imet.pl/pl/page/polityka-prywatnosci"
           target="_blank"
           rel="noopener noreferrer"
         >

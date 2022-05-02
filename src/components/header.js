@@ -17,7 +17,7 @@ const StyledLogo = styled(Logo)`
 const Header = () => {
   return (
     <Container>
-      <a href="https://phuimet.pl" target="_blank" rel="noopener noreferrer">
+      <a href="https://imet.pl" target="_blank" rel="noopener noreferrer">
         <StyledLogo />
       </a>
     </Container>
