@@ -177,9 +177,11 @@ const ReclamationForm = ({ formRef }) => {
               Accept: "application/json",
             },
           })
-            .then((response) => {
-              console.log(response);
-              history.push("/podsumowanie");
+            .then((response) => response.json())
+            .then((data) => {
+              history.push("/podsumowanie", {
+                reclamationCode: data.reclamationCode,
+              });
             })
             .catch((error) => {
               console.error(error);
