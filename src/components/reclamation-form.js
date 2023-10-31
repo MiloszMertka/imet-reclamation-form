@@ -15,6 +15,7 @@ const initialValues = {
   companyNIP: "",
   companyName: "",
   invoiceNumber: "",
+  dateOfPurchase: null,
   attachments: [],
   comments: "",
   products: [
@@ -23,6 +24,9 @@ const initialValues = {
       productName: "",
       reclamationReason: "",
       quantity: 1,
+      dateOfSale: null,
+      receiptOrInvoiceNumber: null,
+      damageDescription: null,
     },
   ],
   email: "",
@@ -35,6 +39,18 @@ const initialValues = {
 const reclamationReasons = [
   { label: "", value: "" },
   {
+    label: "Reklamacja",
+    value: "Reklamacja",
+  },
+  {
+    label: "Zwrot towaru",
+    value: "Zwrot towaru",
+  },
+  {
+    label: "Uszkodzony towar",
+    value: "Uszkodzony towar",
+  },
+  {
     label: "Błąd w cenie",
     value: "Błąd w cenie",
   },
@@ -45,18 +61,6 @@ const reclamationReasons = [
   {
     label: "Błąd w stawce podatku",
     value: "Błąd w stawce podatku",
-  },
-  {
-    label: "Reklamacja",
-    value: "Reklamacja",
-  },
-  {
-    label: "Uszkodzony towar",
-    value: "Uszkodzony towar",
-  },
-  {
-    label: "Zwrot towaru",
-    value: "Zwrot towaru",
   },
 ];
 
@@ -79,6 +83,7 @@ const reclamationSchema = Yup.object().shape({
     .trim()
     .max(255, "Wprowadzono za dużo znaków")
     .required("Należy wypełnić to pole"),
+  dateOfPurchase: Yup.date().nullable().required("Należy wypełnić to pole"),
   attachments: Yup.array().max(10).nullable(),
   comments: Yup.string()
     .trim()
@@ -102,6 +107,24 @@ const reclamationSchema = Yup.object().shape({
         quantity: Yup.number()
           .integer("Należy podać liczbę całkowitą")
           .min(1, "Ilość musi wynosić co najmniej 1"),
+        dateOfSale: Yup.date()
+          .nullable()
+          .when("reclamationReason", {
+            is: "Reklamacja",
+            then: Yup.date().nullable().required("Należy wypełnić to pole"),
+          }),
+        receiptOrInvoiceNumber: Yup.string()
+          .nullable()
+          .when("reclamationReason", {
+            is: "Reklamacja",
+            then: Yup.string().nullable().required("Należy wypełnić to pole"),
+          }),
+        damageDescription: Yup.string()
+          .nullable()
+          .when("reclamationReason", {
+            is: "Reklamacja",
+            then: Yup.string().nullable().required("Należy wypełnić to pole"),
+          }),
       })
     ),
   email: Yup.string()
@@ -222,6 +245,7 @@ const ReclamationForm = ({ formRef }) => {
                   touched={touched}
                   setFieldValue={setFieldValue}
                   invoiceNumber={values.invoiceNumber}
+                  dateOfPurchase={values.dateOfPurchase}
                   comments={values.comments}
                   attachments={values.attachments}
                 />

@@ -53,6 +53,7 @@ const Products = ({
   touched,
   setFieldValue,
   invoiceNumber,
+  dateOfPurchase,
   comments,
   attachments,
 }) => {
@@ -67,6 +68,16 @@ const Products = ({
         handleBlur={handleBlur}
         error={errors.invoiceNumber}
         touched={touched.invoiceNumber}
+      />
+      <Input
+        type="date"
+        name="dateOfPurchase"
+        label="Data zakupu"
+        value={dateOfPurchase}
+        handleChange={handleChange}
+        handleBlur={handleBlur}
+        error={errors.dateOfPurchase}
+        touched={touched.dateOfPurchase}
       />
       <FieldArray
         name="products"
@@ -152,6 +163,64 @@ const Products = ({
                     touched.products[index].quantity
                   }
                 />
+                {product.reclamationReason === "Reklamacja" && (
+                  <>
+                    <Input
+                      type="date"
+                      name={`products.${index}.dateOfSale`}
+                      label="Data sprzedaży"
+                      value={product.dateOfSale}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      error={
+                        errors.products &&
+                        errors.products[index] &&
+                        errors.products[index].dateOfSale
+                      }
+                      touched={
+                        touched.products &&
+                        touched.products[index] &&
+                        touched.products[index].dateOfSale
+                      }
+                    />
+                    <Input
+                      type="text"
+                      name={`products.${index}.receiptOrInvoiceNumber`}
+                      label="Numer paragonu/faktury"
+                      value={product.receiptOrInvoiceNumber}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      error={
+                        errors.products &&
+                        errors.products[index] &&
+                        errors.products[index].receiptOrInvoiceNumber
+                      }
+                      touched={
+                        touched.products &&
+                        touched.products[index] &&
+                        touched.products[index].receiptOrInvoiceNumber
+                      }
+                    />
+                    <Textarea
+                      name={`products.${index}.damageDescription`}
+                      label="Opis uszkodzenia"
+                      value={product.damageDescription}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      error={
+                        errors.products &&
+                        errors.products[index] &&
+                        errors.products[index].damageDescription
+                      }
+                      touched={
+                        touched.products &&
+                        touched.products[index] &&
+                        touched.products[index].damageDescription
+                      }
+                      rows={5}
+                    />
+                  </>
+                )}
               </Product>
             ))}
             <AddButton
@@ -161,6 +230,9 @@ const Products = ({
                   productName: "",
                   reclamationReason: "",
                   quantity: 1,
+                  dateOfSale: null,
+                  receiptOrInvoiceNumber: null,
+                  damageDescription: null,
                 })
               }
             >
