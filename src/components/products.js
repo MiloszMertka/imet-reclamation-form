@@ -186,7 +186,7 @@ const Products = ({
                     <Input
                       type="text"
                       name={`products.${index}.receiptOrInvoiceNumber`}
-                      label="Numer paragonu/faktury"
+                      label="Numer paragonu/faktury (dokument sprzedaży należy przesłać w załączniku)"
                       value={product.receiptOrInvoiceNumber}
                       handleChange={handleChange}
                       handleBlur={handleBlur}
