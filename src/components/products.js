@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FieldArray } from "formik";
+import { FieldArray, useFormikContext } from "formik";
 
 import Input from "./input";
 import AddButton from "./add-button";
@@ -8,6 +8,7 @@ import FileInput from "./file-input";
 import Textarea from "./textarea";
 import Button from "./button";
 import RemoveButton from "./remove-button";
+import { useCallback, useMemo } from "react";
 
 const ProductsList = styled.div`
   border-top: 1px solid ${(props) => props.theme.colors.primary};
@@ -44,41 +45,74 @@ const ButtonsContainer = styled.div`
   }
 `;
 
-const Products = ({
-  products,
-  reclamationReasons,
-  handleChange,
-  handleBlur,
-  errors,
-  touched,
-  setFieldValue,
-  invoiceNumber,
-  dateOfPurchase,
-  comments,
-  attachments,
-}) => {
+const Products = ({ reclamationReasons }) => {
+  const { errors, touched, setFieldTouched, values } = useFormikContext();
+  const { products, attachments } = values;
+
+  const buttonDisabled = useMemo(() => {
+    const productsFieldsTouched =
+      touched.products?.every(
+        (product) =>
+          product.productSymbol &&
+          product.productName &&
+          product.reclamationReason &&
+          (product?.dateOfSale ?? true) &&
+          (product?.receiptOrInvoiceNumber ?? true) &&
+          (product?.damageDescription ?? true)
+      ) ?? false;
+    const productsFieldsInvalid =
+      errors.products?.some(
+        (product) =>
+          product.productName ||
+          product.productSymbol ||
+          product.reclamationReason ||
+          product.quantity ||
+          product.dateOfSale ||
+          product.receiptOrInvoiceNumber ||
+          product.damageDescription
+      ) ?? false;
+
+    return (
+      productsFieldsInvalid ||
+      errors.invoiceNumber ||
+      errors.dateOfPurchase ||
+      errors.comments ||
+      !productsFieldsTouched ||
+      !touched.invoiceNumber ||
+      !touched.dateOfPurchase
+    );
+  }, [
+    errors.invoiceNumber,
+    errors.dateOfPurchase,
+    errors.comments,
+    errors.products,
+    touched.invoiceNumber,
+    touched.dateOfPurchase,
+    touched.products,
+  ]);
+
+  const handleNavigationFailure = useCallback(() => {
+    setFieldTouched("invoiceNumber");
+    setFieldTouched("dateOfPurchase");
+    setFieldTouched("comments");
+
+    products.forEach((product, index) => {
+      setFieldTouched(`products.${index}.productSymbol`);
+      setFieldTouched(`products.${index}.productName`);
+      setFieldTouched(`products.${index}.reclamationReason`);
+
+      if (product.reclamationReason === "Reklamacja - klient ostateczny") {
+        setFieldTouched(`products.${index}.dateOfSale`);
+        setFieldTouched(`products.${index}.receiptOrInvoiceNumber`);
+        setFieldTouched(`products.${index}.damageDescription`);
+      }
+    });
+  }, [setFieldTouched, products]);
+
   return (
     <>
-      <Input
-        type="text"
-        name="invoiceNumber"
-        label="Numer faktury"
-        value={invoiceNumber}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.invoiceNumber}
-        touched={touched.invoiceNumber}
-      />
-      <Input
-        type="date"
-        name="dateOfPurchase"
-        label="Data zakupu"
-        value={dateOfPurchase}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.dateOfPurchase}
-        touched={touched.dateOfPurchase}
-      />
+      <Input name="invoiceNumber" label="Numer faktury" />
+      <Input type="date" name="dateOfPurchase" label="Data zakupu" />
       <FieldArray
         name="products"
         render={(arrayHelpers) => (
@@ -91,57 +125,16 @@ const Products = ({
                   />
                 )}
                 <Input
-                  type="text"
                   name={`products.${index}.productSymbol`}
                   label="Symbol produktu"
-                  value={product.productSymbol}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  error={
-                    errors.products &&
-                    errors.products[index] &&
-                    errors.products[index].productSymbol
-                  }
-                  touched={
-                    touched.products &&
-                    touched.products[index] &&
-                    touched.products[index].productSymbol
-                  }
                 />
                 <Input
-                  type="text"
                   name={`products.${index}.productName`}
                   label="Nazwa produktu"
-                  value={product.productName}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  error={
-                    errors.products &&
-                    errors.products[index] &&
-                    errors.products[index].productName
-                  }
-                  touched={
-                    touched.products &&
-                    touched.products[index] &&
-                    touched.products[index].productName
-                  }
                 />
                 <Dropdown
                   name={`products.${index}.reclamationReason`}
                   label="Przyczyna zwrotu"
-                  value={product.reclamationReason}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  error={
-                    errors.products &&
-                    errors.products[index] &&
-                    errors.products[index].reclamationReason
-                  }
-                  touched={
-                    touched.products &&
-                    touched.products[index] &&
-                    touched.products[index].reclamationReason
-                  }
                   options={reclamationReasons}
                 />
                 <Input
@@ -149,74 +142,23 @@ const Products = ({
                   min={1}
                   name={`products.${index}.quantity`}
                   label="Ilość"
-                  value={product.quantity}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  error={
-                    errors.products &&
-                    errors.products[index] &&
-                    errors.products[index].quantity
-                  }
-                  touched={
-                    touched.products &&
-                    touched.products[index] &&
-                    touched.products[index].quantity
-                  }
                 />
-                {product.reclamationReason === "Reklamacja" && (
+                {product.reclamationReason ===
+                  "Reklamacja - klient ostateczny" && (
                   <>
                     <Input
                       type="date"
                       name={`products.${index}.dateOfSale`}
                       label="Data sprzedaży"
-                      value={product.dateOfSale}
-                      handleChange={handleChange}
-                      handleBlur={handleBlur}
-                      error={
-                        errors.products &&
-                        errors.products[index] &&
-                        errors.products[index].dateOfSale
-                      }
-                      touched={
-                        touched.products &&
-                        touched.products[index] &&
-                        touched.products[index].dateOfSale
-                      }
                     />
                     <Input
                       type="text"
                       name={`products.${index}.receiptOrInvoiceNumber`}
                       label="Numer paragonu/faktury (dokument sprzedaży należy przesłać w załączniku)"
-                      value={product.receiptOrInvoiceNumber}
-                      handleChange={handleChange}
-                      handleBlur={handleBlur}
-                      error={
-                        errors.products &&
-                        errors.products[index] &&
-                        errors.products[index].receiptOrInvoiceNumber
-                      }
-                      touched={
-                        touched.products &&
-                        touched.products[index] &&
-                        touched.products[index].receiptOrInvoiceNumber
-                      }
                     />
                     <Textarea
                       name={`products.${index}.damageDescription`}
                       label="Opis uszkodzenia"
-                      value={product.damageDescription}
-                      handleChange={handleChange}
-                      handleBlur={handleBlur}
-                      error={
-                        errors.products &&
-                        errors.products[index] &&
-                        errors.products[index].damageDescription
-                      }
-                      touched={
-                        touched.products &&
-                        touched.products[index] &&
-                        touched.products[index].damageDescription
-                      }
                       rows={5}
                     />
                   </>
@@ -241,28 +183,24 @@ const Products = ({
           </ProductsList>
         )}
       />
-      <Textarea
-        name="comments"
-        label="Uwagi"
-        value={comments}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.comments}
-        touched={touched.comments}
-        rows={5}
-      />
+      <Textarea name="comments" label="Uwagi" rows={5} />
       <FileInput
         name="attachments"
         heading="Załączniki"
         label="Wybierz pliki"
         info="Max 10 plików typu jpg, png lub pdf o rozmiarze max 10 MB każdy"
         files={attachments}
-        setFieldValue={setFieldValue}
         multiple
       />
       <ButtonsContainer>
         <Button link="/dane-firmy">Wstecz</Button>
-        <Button link="/dane-kontaktowe">Dalej</Button>
+        <Button
+          link="/dane-kontaktowe"
+          disabled={buttonDisabled}
+          onFailure={handleNavigationFailure}
+        >
+          Dalej
+        </Button>
       </ButtonsContainer>
     </>
   );

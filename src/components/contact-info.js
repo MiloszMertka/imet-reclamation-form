@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Input from "./input";
 import Checkbox from "./checkbox";
 import Button from "./button";
+import { useFormikContext } from "formik";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -15,60 +16,15 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const ContactInfo = ({
-  email,
-  name,
-  phoneNumber,
-  handleChange,
-  handleBlur,
-  errors,
-  touched,
-  setFieldValue,
-  regulationsAgreement,
-  privacyPolicyAgreement,
-  isSubmitting,
-  isValid,
-}) => {
+const ContactInfo = () => {
+  const { isSubmitting } = useFormikContext();
+
   return (
     <>
-      <Input
-        type="text"
-        name="email"
-        label="Adres e-mail"
-        value={email}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.email}
-        touched={touched.email}
-      />
-      <Input
-        type="text"
-        name="name"
-        label="Imię i nazwisko"
-        value={name}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.name}
-        touched={touched.name}
-      />
-      <Input
-        type="text"
-        name="phoneNumber"
-        label="Numer kontaktowy"
-        value={phoneNumber}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.phoneNumber}
-        touched={touched.phoneNumber}
-      />
-      <Checkbox
-        name="regulationsAgreement"
-        checked={regulationsAgreement}
-        setFieldValue={setFieldValue}
-        handleBlur={handleBlur}
-        error={errors.regulationsAgreement}
-        touched={touched.regulationsAgreement}
-      >
+      <Input name="email" label="Adres e-mail" />
+      <Input name="name" label="Imię i nazwisko" />
+      <Input name="phoneNumber" label="Numer kontaktowy" />
+      <Checkbox name="regulationsAgreement">
         Oświadczam, że akceptuję warunki wystawienia faktury korygującej przy
         zwrocie towaru określone w{" "}
         <a
@@ -80,14 +36,7 @@ const ContactInfo = ({
         </a>
         .
       </Checkbox>
-      <Checkbox
-        name="privacyPolicyAgreement"
-        checked={privacyPolicyAgreement}
-        setFieldValue={setFieldValue}
-        handleBlur={handleBlur}
-        error={errors.privacyPolicyAgreement}
-        touched={touched.privacyPolicyAgreement}
-      >
+      <Checkbox name="privacyPolicyAgreement">
         Oświadczam, że zapoznałem/am się z{" "}
         <a
           href="https://b2b.imet.pl/pl/page/polityka-prywatnosci"

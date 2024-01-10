@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 import Input from "./input";
 import Button from "./button";
+import { useFormikContext } from "formik";
+import { useCallback, useMemo } from "react";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -9,38 +11,40 @@ const ButtonContainer = styled.div`
   margin: 2.5rem 0;
 `;
 
-const CompanyData = ({
-  nip,
-  name,
-  handleChange,
-  handleBlur,
-  errors,
-  touched,
-}) => {
+const CompanyData = () => {
+  const { errors, touched, setFieldTouched } = useFormikContext();
+
+  const buttonDisabled = useMemo(
+    () =>
+      errors.companyNIP ||
+      errors.companyName ||
+      !touched.companyNIP ||
+      !touched.companyName,
+    [
+      errors.companyNIP,
+      errors.companyName,
+      touched.companyNIP,
+      touched.companyName,
+    ]
+  );
+
+  const handleNavigationFailure = useCallback(() => {
+    setFieldTouched("companyNIP");
+    setFieldTouched("companyName");
+  }, [setFieldTouched]);
+
   return (
     <>
-      <Input
-        type="text"
-        name="companyNIP"
-        label="NIP firmy"
-        value={nip}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.companyNIP}
-        touched={touched.companyNIP}
-      />
-      <Input
-        type="text"
-        name="companyName"
-        label="Nazwa firmy"
-        value={name}
-        handleChange={handleChange}
-        handleBlur={handleBlur}
-        error={errors.companyName}
-        touched={touched.companyName}
-      />
+      <Input name="companyNIP" label="NIP firmy" />
+      <Input name="companyName" label="Nazwa firmy" />
       <ButtonContainer>
-        <Button link="/produkty">Dalej</Button>
+        <Button
+          link="/produkty"
+          disabled={buttonDisabled}
+          onFailure={handleNavigationFailure}
+        >
+          Dalej
+        </Button>
       </ButtonContainer>
     </>
   );

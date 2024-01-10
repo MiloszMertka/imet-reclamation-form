@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import selectArrow from "../assets/images/svg/select-arrow.svg";
+import { ErrorMessage, useField } from "formik";
 
 const Container = styled.div`
   margin: 1rem 0;
@@ -41,28 +42,17 @@ const Error = styled.span`
   font-size: 0.875rem;
 `;
 
-const Dropdown = ({
-  options,
-  name,
-  label,
-  value,
-  handleChange,
-  handleBlur,
-  error,
-  touched,
-  ...props
-}) => {
+const Dropdown = ({ options, name, label, ...props }) => {
+  const [field, meta, helpers] = useField(name);
+
   return (
     <Container>
       <Label htmlFor={name}>{label}</Label>
       <Select
         id={name}
-        name={name}
-        value={value}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={error}
-        touched={touched}
+        {...field}
+        error={meta.error}
+        touched={meta.touched}
         {...props}
       >
         {options.map((option) => (
@@ -71,7 +61,9 @@ const Dropdown = ({
           </option>
         ))}
       </Select>
-      {error && touched && <Error>{error}</Error>}
+      <Error>
+        <ErrorMessage name={name} />
+      </Error>
     </Container>
   );
 };

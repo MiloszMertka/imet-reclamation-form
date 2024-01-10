@@ -39,8 +39,8 @@ const initialValues = {
 const reclamationReasons = [
   { label: "", value: "" },
   {
-    label: "Reklamacja",
-    value: "Reklamacja",
+    label: "Reklamacja - klient ostateczny",
+    value: "Reklamacja - klient ostateczny",
   },
   {
     label: "Zwrot towaru",
@@ -110,19 +110,19 @@ const reclamationSchema = Yup.object().shape({
         dateOfSale: Yup.date()
           .nullable()
           .when("reclamationReason", {
-            is: "Reklamacja",
+            is: "Reklamacja - klient ostateczny",
             then: Yup.date().nullable().required("Należy wypełnić to pole"),
           }),
         receiptOrInvoiceNumber: Yup.string()
           .nullable()
           .when("reclamationReason", {
-            is: "Reklamacja",
+            is: "Reklamacja - klient ostateczny",
             then: Yup.string().nullable().required("Należy wypełnić to pole"),
           }),
         damageDescription: Yup.string()
           .nullable()
           .when("reclamationReason", {
-            is: "Reklamacja",
+            is: "Reklamacja - klient ostateczny",
             then: Yup.string().nullable().required("Należy wypełnić to pole"),
           }),
       })
@@ -192,78 +192,38 @@ const ReclamationForm = ({ formRef }) => {
           data.attachments = base64attachments;
           data = JSON.stringify(data);
 
-          await fetch(`${SERVER_URL}/api/reclamation`, {
-            body: data,
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              history.push("/podsumowanie", {
-                reclamationCode: data.reclamationCode,
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-              alert("Wystąpił błąd przy wysyłaniu zgłoszenia");
+          try {
+            const response = await fetch(`${SERVER_URL}/api/reclamation`, {
+              body: data,
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
             });
+            const responseData = await response.json();
+            history.push("/podsumowanie", {
+              reclamationCode: responseData.reclamationCode,
+            });
+          } catch (error) {
+            console.error(error);
+            alert("Wystąpił błąd przy wysyłaniu zgłoszenia");
+          }
         }}
       >
-        {({
-          values,
-          handleChange,
-          handleBlur,
-          setFieldValue,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
+        {({ isSubmitting }) => (
           <Form encType="multipart/form-data">
             <LoadingIndicator isLoading={isSubmitting} />
             <Switch>
               <Redirect from="/" to="/dane-firmy" exact />
               <Route path="/dane-firmy" exact>
-                <CompanyData
-                  nip={values.companyNIP}
-                  name={values.companyName}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  errors={errors}
-                  touched={touched}
-                />
+                <CompanyData />
               </Route>
               <Route path="/produkty" exact>
-                <Products
-                  products={values.products}
-                  reclamationReasons={reclamationReasons}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  errors={errors}
-                  touched={touched}
-                  setFieldValue={setFieldValue}
-                  invoiceNumber={values.invoiceNumber}
-                  dateOfPurchase={values.dateOfPurchase}
-                  comments={values.comments}
-                  attachments={values.attachments}
-                />
+                <Products reclamationReasons={reclamationReasons} />
               </Route>
               <Route path="/dane-kontaktowe" exact>
-                <ContactInfo
-                  email={values.email}
-                  name={values.name}
-                  phoneNumber={values.phoneNumber}
-                  regulationsAgreement={values.regulationsAgreement}
-                  privacyPolicyAgreement={values.privacyPolicyAgreement}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  errors={errors}
-                  touched={touched}
-                  setFieldValue={setFieldValue}
-                  isSubmitting={isSubmitting}
-                />
+                <ContactInfo />
               </Route>
               <Route path="/podsumowanie" exact>
                 <Summary />

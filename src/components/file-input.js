@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useFormikContext } from "formik";
 
 const Container = styled.div`
   margin: 1rem 0;
@@ -45,15 +46,9 @@ const Info = styled.span`
   font-style: italic;
 `;
 
-const FileInput = ({
-  name,
-  label,
-  heading,
-  info,
-  files,
-  setFieldValue,
-  ...props
-}) => {
+const FileInput = ({ name, label, heading, info, files, ...props }) => {
+  const { setFieldValue } = useFormikContext();
+
   return (
     <Container>
       <Heading>{heading}</Heading>

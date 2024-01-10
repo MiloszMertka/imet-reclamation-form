@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useCallback } from "react";
 
 const ButtonLink = styled.a`
   display: block;
@@ -11,6 +12,7 @@ const ButtonLink = styled.a`
   text-transform: uppercase;
   margin: 0.5rem 0;
   width: 100%;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 
   &:hover {
     background-color: ${(props) => props.theme.colors.primary};
@@ -29,9 +31,25 @@ const Submit = styled(ButtonLink)`
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `;
 
-const Button = ({ link, children, disabled, ...props }) => {
+const Button = ({ link, onFailure, children, disabled, ...props }) => {
+  const handleButtonLinkClick = useCallback(
+    (event) => {
+      if (disabled) {
+        event.preventDefault();
+        onFailure();
+      }
+    },
+    [disabled, onFailure]
+  );
+
   return link ? (
-    <ButtonLink as={Link} to={link} {...props}>
+    <ButtonLink
+      as={Link}
+      to={link}
+      disabled={disabled}
+      onClick={(event) => handleButtonLinkClick(event)}
+      {...props}
+    >
       {children}
     </ButtonLink>
   ) : (

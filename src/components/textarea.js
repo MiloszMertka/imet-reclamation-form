@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { ErrorMessage, useField } from "formik";
 
 const Container = styled.div`
   margin: 1rem 0;
@@ -26,30 +27,22 @@ const Error = styled.span`
   font-size: 0.875rem;
 `;
 
-const Textarea = ({
-  name,
-  label,
-  value,
-  handleChange,
-  handleBlur,
-  error,
-  touched,
-  ...props
-}) => {
+const Textarea = ({ name, label, ...props }) => {
+  const [field, meta, helpers] = useField(name);
+
   return (
     <Container>
       <Label htmlFor={name}>{label}</Label>
       <TextInput
         id={name}
-        name={name}
-        value={value}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        error={error}
-        touched={touched}
+        {...field}
+        error={meta.error}
+        touched={meta.touched}
         {...props}
       />
-      {error && touched && <Error>{error}</Error>}
+      <Error>
+        <ErrorMessage name={name} />
+      </Error>
     </Container>
   );
 };

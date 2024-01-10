@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import { ReactComponent as CheckmarkIcon } from "../assets/images/svg/checkmark-icon.svg";
+import { ErrorMessage, useField, useFormikContext } from "formik";
 
 const Container = styled.div`
   margin: 1rem 0;
@@ -54,46 +55,46 @@ const Error = styled.div`
   margin-top: 0.5rem;
 `;
 
-const Checkbox = ({
-  name,
-  children,
-  checked,
-  setFieldValue,
-  handleBlur,
-  error,
-  touched,
-  ...props
-}) => {
+const Checkbox = ({ name, children, ...props }) => {
+  const { setFieldValue } = useFormikContext();
+  const [field, meta, helpers] = useField(name);
+
   return (
     <Container>
       <HiddenControl
         type="checkbox"
         id={`${name}_hidden`}
         name={name}
-        checked={checked}
+        checked={field.value}
         disabled={true}
         {...props}
       />
       <VisibleControl
         id={name}
-        onClick={() => setFieldValue(name, !checked)}
+        onClick={() => setFieldValue(name, !field.value)}
         onKeyDown={(event) =>
           (event.key === " " || event.key === "Enter") &&
-          setFieldValue(name, !checked)
+          setFieldValue(name, !field.value)
         }
         tabIndex={0}
-        checked={checked}
-        onBlur={handleBlur}
-        error={error}
-        touched={touched}
+        checked={field.value}
+        onBlur={field.onBlur}
+        error={meta.error}
+        touched={meta.touched}
       >
-        <Checkmark checked={checked} />
+        <Checkmark checked={field.value} />
       </VisibleControl>
       <TextContainer>
-        <Label htmlFor={`${name}_hidden`} error={error} touched={touched}>
+        <Label
+          htmlFor={`${name}_hidden`}
+          error={meta.error}
+          touched={meta.touched}
+        >
           {children}
         </Label>
-        {error && touched && <Error>{error}</Error>}
+        <Error>
+          <ErrorMessage name={name} />
+        </Error>
       </TextContainer>
     </Container>
   );
