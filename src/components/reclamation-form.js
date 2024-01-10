@@ -43,6 +43,10 @@ const reclamationReasons = [
     value: "Reklamacja - klient ostateczny",
   },
   {
+    label: "Reklamacja przedsprzedażna",
+    value: "Reklamacja przedsprzedażna",
+  },
+  {
     label: "Zwrot towaru",
     value: "Zwrot towaru",
   },
@@ -123,6 +127,10 @@ const reclamationSchema = Yup.object().shape({
           .nullable()
           .when("reclamationReason", {
             is: "Reklamacja - klient ostateczny",
+            then: Yup.string().nullable().required("Należy wypełnić to pole"),
+          })
+          .when("reclamationReason", {
+            is: "Reklamacja przedsprzedażna",
             then: Yup.string().nullable().required("Należy wypełnić to pole"),
           }),
       })

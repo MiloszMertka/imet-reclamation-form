@@ -105,6 +105,8 @@ const Products = ({ reclamationReasons }) => {
         setFieldTouched(`products.${index}.dateOfSale`);
         setFieldTouched(`products.${index}.receiptOrInvoiceNumber`);
         setFieldTouched(`products.${index}.damageDescription`);
+      } else if (product.reclamationReason === "Reklamacja przedsprzedażna") {
+        setFieldTouched(`products.${index}.damageDescription`);
       }
     });
   }, [setFieldTouched, products]);
@@ -162,6 +164,13 @@ const Products = ({ reclamationReasons }) => {
                       rows={5}
                     />
                   </>
+                )}
+                {product.reclamationReason === "Reklamacja przedsprzedażna" && (
+                  <Textarea
+                    name={`products.${index}.damageDescription`}
+                    label="Opis uszkodzenia"
+                    rows={5}
+                  />
                 )}
               </Product>
             ))}
