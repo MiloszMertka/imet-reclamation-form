@@ -51,7 +51,7 @@ const Products = ({ reclamationReasons }) => {
 
   const buttonDisabled = useMemo(() => {
     const productsFieldsTouched =
-      touched.products?.every(
+      touched?.products?.every(
         (product) =>
           product.productSymbol &&
           product.productName &&
@@ -61,15 +61,15 @@ const Products = ({ reclamationReasons }) => {
           (product?.damageDescription ?? true)
       ) ?? false;
     const productsFieldsInvalid =
-      errors.products?.some(
+      errors?.products?.some(
         (product) =>
-          product.productName ||
-          product.productSymbol ||
-          product.reclamationReason ||
-          product.quantity ||
-          product.dateOfSale ||
-          product.receiptOrInvoiceNumber ||
-          product.damageDescription
+          product?.productName ||
+          product?.productSymbol ||
+          product?.reclamationReason ||
+          product?.quantity ||
+          product?.dateOfSale ||
+          product?.receiptOrInvoiceNumber ||
+          product?.damageDescription
       ) ?? false;
 
     return (
